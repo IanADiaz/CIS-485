@@ -1,0 +1,33 @@
+{
+  "home": {
+      "welcomeMessage": "Welcome to My Website for CIS485!",
+      "introText": "This is the start of my website created for the Web Programming II lab.",
+      "indexImage": "images/headerImage.jpg"
+  },
+
+  "galleryTitle": "Check out the Gallery!",
+
+  "gallery": [
+      {
+          "caption": "Image 1",
+          "image": "images/image1.jpg",
+          "description": "Description for Image 1"
+      },
+      {
+          "caption": "Image 2",
+          "image": "images/image2.jpg",
+          "description": "Description for Image 2"
+      },
+      {
+          "caption": "Image 3",
+          "image": "images/image3.jpg",
+          "description": "Description for Image 3"
+      }
+  ],
+
+  "contact": {
+      "contactText": "Have questions? Don't hesistate to reach out.",
+      "contactEmail": "ian.a.diaz@outlook.com",
+      "contactNum": "111-222-333"
+  }
+}

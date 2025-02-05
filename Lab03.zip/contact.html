@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> CIS485 LAB03 </title>
+        <link href="css/style.css" rel="stylesheet">
+        <script defer src="js/fetchData.js"></script>
+    </head>
+
+    <body data-page="contact">
+        <div class="entireContainer">
+            <div class="innerContainer">
+                <div class="headerContents">
+                    <nav class="navContainer">
+                        <button class="navButtons"><a href="index.html" class="homeButton"> Home </a></button>
+                        <button class="navButtons"><a href="gallery.html" class="galleryButton"> Gallery </a></button>
+                        <button class="navButtons"><a href="contact.html" class="contactButton"> Contact </a></button>
+                    </nav>
+                    <h1 id="contactText">
+                        Loading..
+                    </h1>
+                </div>
+            
+                <div class="cSide2sideText">
+                    <div class="formContainer">
+                        <form>
+                            <table>    
+                                <tr>
+                                    <td class="formTitle"> Email Form </td>
+                                    <td class="formTitle"><input type="submit" value="Submit Form" class="submitButton" id="submitButtonJS"> </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="formLabels"> Name: </td>
+                                    <td><input type="text" class="largeInput" id="fName"></td>
+                                </tr>
+                                <tr>
+                                    <td class="formLabels"> Email: </td>
+                                    <td><input type="email" class="largeInput" id="email"></td>
+                                </tr>
+                                <tr>
+                                    <td class="formLabels"> Subject: </td>
+                                    <td><input type="text" class="largeInput" id="subject"></td>
+                                </tr>
+                                <tr>
+                                    <td class="formLabels"> Message: </td>
+                                    <td><input type="textarea" class="smallInput" id="message"></td>
+                                </tr>
+                            </table>
+                        </form>
+                        
+                    </div>
+                    <div class="cInnerRightBox">
+                        <p>
+                            Email: <span id="contactEmail">Loading...</span>
+                            <br><br>
+                            Number: <span id="contactNum">Loading...</span>
+                        </p>
+                        <p id="errorMessage"> Please Fill in ALL Fields! </p>
+                    </div>
+                    <script src="js/formValidation.js"></script>
+                    <audio id="successAudio" src="sounds/successAudio.mp3.wav"></audio>
+                    <audio id="errorAudio" src="sounds/errorAudio.mp3.wav"></audio>
+                </div>
+                <footer class="subWords">Ian Diaz 2025</footer>
+            </div>   
+        </div>
+    </body>
+</html>

@@ -10,7 +10,14 @@ const student = {
 	grade: 4.0
 };
 
-console.log('Student Name: ' + student.name + '\nStudent Age: ' + student.age)
+console.log('Student Name: ' + student.name + '\nStudent Age: ' + student.age + '\n');
+
+//Lab06 Part 3 JSON in Node.js Steps 2-3
+const jsonString = JSON.stringify(student);
+console.log('Serialized object: ', jsonString);
+const convertedString = JSON.parse(jsonString);
+//console.log(convertedString.name + '\n' + convertedString.age);
+console.log('\nDeserialized object: ', convertedString);
 
 
 const course = {
@@ -49,7 +56,7 @@ const newStudent1 = new Student('Dan Grigs', 22);
 newStudent1.addSubject('Calculus II');
 newStudent1.addSubject('English II');
 newStudent1.addSubject('Intro To Physics');
-console.log(newStudent1.subjects);
+console.log('Dan Grigs is now enrolled in: ' + newStudent1.subjects);
 
 
 class Course {
@@ -82,3 +89,17 @@ console.log('The Students: \n' + newStudent1.name + ' | Age: ' + newStudent1.age
 
 console.log('The average age of students in this course is: ', philCourse.getAvgAge());
 
+
+const studentArray = [
+	new Student('Bob Ryan',	20, ['Math', 'History']),
+	new Student('Bill Nye', 21, ['Chemistry', 'Math']),
+	new Student('Ryan Conner', 24, ['History', 'Biology'])
+];
+
+console.log('Original student array: ', studentArray);
+
+const studentsJSON = JSON.stringify(studentArray);
+console.log('\nJSON String: ', studentsJSON);
+
+const parsedStudents = JSON.parse(studentsJSON);
+console.log('\nParsed Student Array: ', parsedStudents);

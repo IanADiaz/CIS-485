@@ -1,0 +1,31 @@
+A cookie is a small piece of data that a server sends to the user's web browser. The browser may store it and send it back with future requests to the same server. Cookies are used to remember information about the user, such as login status, preferences, and tracking information.
+
+Cookies are stored in the user's web browser. They can be stored in memory (session cookies) or on the user's hard drive (persistent cookies).
+EXCEPTION HANDLING 
+
+HTTP Response Codes:
+200 = Everythings Good!
+201 = Resource Created Succesfully
+200-299 = Generally all mean that everthings ok (expected happy path)
+
+300-399 = Generally redirects
+
+400-499 = Generally bad (Telling the browser did not follow proper protocol, did not ask the right way so nothing can be delivered)
+404 = Resources not found
+
+500-599 = (The server did not follow proper protocol)
+
+
+res.json = returning data (decouples information from presentation)
+
+res.send = returning HTML page (older method)
+
+HTTP is stateless, it has no memory of previous requests made
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Cookies are attatched to requests and responses and stored in local storage (users web  browser) = Basically the browser and server passing a note back n fourth 
+- Limited in capacity (4000 characters)
+
+Server Side Sessions = information (cookie) stays in memory on the server, server assigned ID to the cookie
+- No excess bandwidth

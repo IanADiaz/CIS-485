@@ -1,0 +1,35 @@
+<div>
+	<p>{{welcomeMessage}}</p>
+
+	{{#if people}}
+		<ul>	
+			{{#each people}}
+				<li>{{this.name}} - {{this.role}}</li>
+			{{/each}}
+		</ul>
+	{{else}}
+		<p> No People to Show! </p>
+	{{/if}}
+
+	{{#if items}}
+		<ul>
+			{{#each items}}
+				<li><a href="/items/{{this.id}}">{{this.name}} - {{this.description}}</a></li>
+			{{/each}}
+		</ul>
+	{{/if}}
+
+	{{#if item}}
+		<h2>{{item.name}}</h2>
+		<p>{{item.description}}</p>
+		<p>Price: ${item.price}</p>
+	{{/if}}
+
+	{{#if errorMessage}}
+		<p>{{errorMessage}}</p>
+	{{/if}}
+
+	{{#if showImage}}
+		<img src="/images/sample.jpg" alt="Sample Image">
+	{{/if}}
+</div>

@@ -1,0 +1,57 @@
+
+ianad@T3RK0 MINGW64 ~/CIS485/CIS-485/Lab-20 (main)
+$ node generateToken.js '{"movie" : "Dune 2.", "snack-money": "$9"}' 12345
+Generated JWT:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb3ZpZSI6IkR1bmUgMi4iLCJzbmFjay1tb25leSI6IiQ5IiwiaWF0IjoxNzQ0MzIwODc4LCJleHAiOjE3NDQzMjQ0Nzh9.PtYCN0H2vL635j3ZQlcXqlSPDYUW9SW2pLgZ28lpsX4
+
+ianad@T3RK0 MINGW64 ~/CIS485/CIS-485/Lab-20 (main)
+$ node decodeToken.js eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb3ZpZSI6IkR1bmUgMi4iLCJzbmFjay1tb25leSI6IiQ5IiwiaWF0IjoxNzQ0MzIwODc4LCJleHAiOjE3NDQzMjQ0Nzh9.PtYCN0H2vL635j3ZQlcXqlSPDYUW9SW2pLgZ28lpsX4
+Header:  { alg: 'HS256', typ: 'JWT' }
+Payload:  {
+  movie: 'Dune 2.',
+  'snack-money': '$9',
+  iat: 1744320878,
+  exp: 1744324478
+}
+
+ianad@T3RK0 MINGW64 ~/CIS485/CIS-485/Lab-20 (main)
+$ node verifyToken.js eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb3ZpZSI6IkR1bmUgMi4iLCJzbmFjay1tb25leSI6IiQ5IiwiaWF0IjoxNzQ0MzIwODc4LCJleHAiOjE3NDQzMjQ0Nzh9.PtYCN0H2vL635j3ZQlcXqlSPDYUW9SW2pLgZ28lpsX4 12345
+Token is valid. Payload:  {
+  movie: 'Dune 2.',
+  'snack-money': '$9',
+  iat: 1744320878,
+  exp: 1744324478
+}
+
+
+7. Now lets try and change some of the claims.
+Keep your header and signature the same, but lets edit your snack-credits so that you have $9999
+instead of just $9.
+
+ianad@T3RK0 MINGW64 ~/CIS485/CIS-485/Lab-20 (main)
+$ node generateToken.js '{"movie" : "Dune 2.", "snack-money": "$9999"}' 12345
+Generated JWT:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb3ZpZSI6IkR1bmUgMi4iLCJzbmFjay1tb25leSI6IiQ5OTk5IiwiaWF0IjoxNzQ0MzIxMzQwLCJleHAiOjE3NDQzMjQ5NDB9.RsWWzSp4rKfBuH3neZDlb7X8GADuIREmHKbWQoAWCt4
+
+Take the middle part of the token and use our previous base64 decoding program to decode it from
+lab 8. Now put this newly edited json into our base64-encode program from lab-08.
+
+ianad@T3RK0 MINGW64 ~/CIS485/CIS-485/Lab-18 (main)
+$ node encoding.js
+Type what you want encoded:eyJtb3ZpZSI6IkR1bmUgMi4iLCJzbmFjay1tb25leSI6IiQ5OTk5IiwiaWF0IjoxNzQ0MzIxMzQwLCJleHAiOjE3NDQzMjQ5NDB9
+Encoded: ZXlKdGIzWnBaU0k2SWtSMWJtVWdNaTRpTENKemJtRmpheTF0YjI1bGVTSTZJaVE1T1RrNUlpd2lhV0YwSWpveE56UTBNekl4TXpRd0xDSmxlSEFpT2pFM05EUXpNalE1TkRCOQ==
+Decoded: eyJtb3ZpZSI6IkR1bmUgMi4iLCJzbmFjay1tb25leSI6IiQ5OTk5IiwiaWF0IjoxNzQ0MzIxMzQwLCJleHAiOjE3NDQzMjQ5NDB9
+
+
+Once you have the base64 encoding, replace the middle part of your token with this new output.
+Now run this new Frankenstein token back through the verify-token.js function. What happened?
+What would you have to do for the token to be valid?
+
+ianad@T3RK0 MINGW64 ~/CIS485/CIS-485/Lab-20 (main)
+$ node verifyToken.js eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ZXlKdGIzWnBaU0k2SWtSMWJtVWdNaTRpTENKemJtRmpheTF0YjI1bGVTSTZJaVE1T1RrNUlpd2lhV0YwSWpveE56UTBNekl4TXpRd0xDSmxlSEFpT2pFM05EUXpNalE1TkRCOQ==.PtYCN0H2vL635j3ZQlcXqlSPDYUW9SW2pLgZ28lpsX4 12345
+Invalid token:  invalid token
+
+ianad@T3RK0 MINGW64 ~/CIS485/CIS-485/Lab-20 (main)
+$
+
+
+Answer: 
+After replacing it with the encoded version of the tokens payload, even with the same password its rendered invalid. To make it valid again we'd have to decode it 

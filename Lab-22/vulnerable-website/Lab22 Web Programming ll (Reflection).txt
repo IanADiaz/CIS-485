@@ -1,0 +1,7 @@
+Lab22 Web Programming ll
+
+So after all this I saw how cross scripting could use comment sections to send other users alerts if the comment area didn't properly render the input. By inserting the new code ".replace(/</g, "&lt;").replace('/>/g, &"gt;")", < and > characters are replaced to prevent the comment box from taking in HTML tags as input. Looking up how attackers could circumvent this defense, I found that they could submit encoded characters to bypass the filter.
+
+Without proper query "sanitization" for logins, like using the proper placeholders in query select statements, attackers can pass an always true statement using 1=1 into the login to trick the code to login any user. The inserted code used the proper placeholders ? for MySQL but $1, $2, etc... for psql. Attackers could maybe look for other parameters to manipulate in the case they're not all using parameterized queries. 
+
+Finally, I also learned that a normal session cookie can be stolen from the browser and used by someone else to get access to a website using the other persons credentials. The new code used secure cookies to fix this and stop this from happening, cookie: { secure: true, httpOnly: true }. Attackers could still steal cookies through cross scripting like the comment textbox example, and if https isn't enforced. 

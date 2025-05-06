@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <hello-world></hello-world>
+        <button onclick="removeHello()">Remove HelloWorld</button>
+        <p id="status"></p>
+        <script>
+            function removeHello() {
+                const el = document.querySelector('hello-world');
+                el.remove(); 
+                document.getElementById('status').textContent = 'Timer stopped.';
+            }
+        </script>
+        <!-- <script type="module" src="hello-world.js"></script> -->
+
+        <div style="--greeter-color: crimson;">
+            <x-greeter>WebDev</x-greeter>
+        </div>
+        <template id="tpl-greeter">
+            <!-- <style>p {color: teal; }</style> -->
+             <style>p {
+                color: var(--greeter-color, purple);
+                font-weight: bold;
+             }
+             </style>
+            <p> Greetings, <slot></slot>!</p>
+        </template>
+        <!-- <script type="module" src="greeter.js"></script> -->
+
+        <user-card name="Alice"></user-card>
+        <script>
+        setTimeout(() => {
+            document.querySelector('user-card').setAttribute('name', 'Bob');
+        }, 2000);
+        </script>
+        <!-- <script type="module" src="user-card.js"></script> -->
+        
+        <user-card name="Carol"></user-card>
+        <script>
+        document.body.addEventListener('user-greet', e => {
+            alert(`Hello, ${e.detail}!`);
+        });
+        </script>
+
+        <br><br><br>
+
+        <tab-panel>
+            <button slot="tab" onclick="activate(0)">One</button>
+            <button slot="tab" onclick="activate(1)">Two</button>
+            <div slot="active" id="p0">Content 1</div>
+            <div slot="panel" id="p1">Content 2</div>
+        </tab-panel>
+        <!-- <script type="module" src="tab-panel.js"></script> -->
+        <script>
+            // function activate(i) {
+            // Array.from(document.querySelectorAll('[slot]')).forEach((el, idx) =>
+            //     el.setAttribute('slot', idx === i ? 'active' : 'panel')
+            // );
+            // }
+            function activate(i) {
+            const panels = document.querySelectorAll("#p0, #p1");
+            panels.forEach((el, idx) =>
+            el.setAttribute("slot", idx === i ? "active" : "panel")
+            );
+            }
+            activate(0);
+        </script>
+        <script type="module" src="main.js"></script>
+    </body>
+</html>

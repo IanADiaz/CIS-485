@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Boids WASM</title>
+  <style>canvas { border:1px solid #000; }</style>
+</head>
+<body>
+  <h1>Boids Flocking Simulation</h1>
+  <canvas id="c" width="600" height="400"></canvas>
+  <script src="boids.js"></script>
+  <script>
+    boidsModule().then(Module => {
+      const n = 100;
+      const canvas = document.getElementById('c');
+      const ctx = canvas.getContext('2d');
+      const size = 4;
+      const ptr = Module._init_boids(n);
+      const heap = Module.HEAPF32;
+      let last = performance.now();
+
+      function loop() {
+        const now = performance.now();
+        const dt = (now - last) / 1000;
+        last = now;
+
+        Module._update_boids(ptr, n, dt);
+
+        ctx.clearRect(0, 0, 600, 400);
+        for (let i = 0; i < n; i++) {
+          const x = heap[ptr / 4 + i * size + 0];
+          const y = heap[ptr / 4 + i * size + 1];
+          ctx.beginPath();
+          ctx.arc(x, y, 3, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+
+        requestAnimationFrame(loop);
+      }
+
+      loop();
+    });
+  </script>
+</body>
+</html>

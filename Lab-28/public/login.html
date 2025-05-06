@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <form id="login">
+        <label>Username: <input id="usersname" required /></label>
+        <button>Enter Chat</button>
+    </form>
+
+    <script>
+        document.getElementById('login').onsubmit = function(e) {
+            e.preventDefault();
+            const user = document.getElementById('usersname').value;
+            localStorage.setItem('username', user);
+            window.location = '/chat.html';
+        };
+    </script>
+</body>
+</html>

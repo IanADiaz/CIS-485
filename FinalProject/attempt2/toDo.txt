@@ -1,0 +1,14 @@
+You still need one more restful API:
+    - GET
+    - PUT
+    - POST
+    - DELETE
+^^^Possible Ideas:
+    - GET the chat room
+    - PUT their messages 
+    - POST new messages
+    - DELETE their messages
+^^Above has been verrified
+
+reinforce new chat routes with authentication and authorization!
+^^^Im pretty sure i already did this with the use of js tokens

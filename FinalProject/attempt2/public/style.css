@@ -1,0 +1,176 @@
+nav {
+  background-color: #000000;
+  color: #fff;
+  padding: 30px 60px;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+nav li {
+  list-style: none;
+}
+
+nav li a {
+  /* color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 8px; */
+  font-size: 1em;
+    background-color: rgb(0, 0, 0);
+    border: 3px solid rgb(241, 243, 241);
+    border-radius: 8px;
+    transition: 0.3s;
+    padding: 5px;
+    color: white;
+    text-decoration: underline;
+}
+
+nav li a:hover {
+  /* color: yellow;
+  text-decoration: none; */
+  background-color: rgba(83, 92, 80, 0);
+    border-color: #ffffff;
+    text-shadow:    0px 0px 7px rgba(255, 255, 255, 1),
+                    0px 0px 20px rgba(255, 255, 255, 1),
+                    0px 0px 10px rgb(255, 255, 255, 1),
+                    0px 0px 15px rgba(255, 255, 255, 1);;
+    box-shadow:
+                    0px 0px 10px rgba(255, 255, 255, 1),
+                    0px 0px 20px rgb(255, 255, 255),
+                    0px 0px 10px rgb(255, 255, 255, 1);
+    transition: 0.3s;
+    color: white;
+}
+
+.avatar-ctn {
+  background-color: white;
+  text-align: center;
+  border-top-left-radius: 13px;
+  border-top-right-radius: 13px;
+}
+
+.avatar {
+  width: 65%;
+  border-bottom: 1px solid rgba(0,0,0,0.125);
+}
+body {
+  background:  rgb(0, 0, 0);
+    align-content: center;
+}
+.jumbotron {
+  background-color: rgb( 20, 20, 20);
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 1),
+              0px 0px 20px rgb(255, 255, 255),
+              0px 0px 10px rgb(255, 255, 255, 1);
+  color: white;
+  /* width: fit-content; */
+  /* height: fit-content ; */
+  width: 100%;
+  height: max-content;
+}
+.display-4 {
+  font-weight: bold;
+}
+.learnMoreButton {
+  font-size: 1em;
+  background-color: rgb(0, 0, 0);
+  border: 3px solid rgb(241, 243, 241);
+  border-radius: 8px;
+  transition: 0.3s;
+  padding: 5px;
+  color: white;
+  text-decoration: underline;
+}
+.learnMoreButton:hover {
+  background-color: rgba(83, 92, 80, 0);
+  border-color: #ffffff;
+  text-shadow:    0px 0px 7px rgba(255, 255, 255, 1),
+                  0px 0px 20px rgba(255, 255, 255, 1),
+                  0px 0px 10px rgb(255, 255, 255, 1),
+                  0px 0px 15px rgba(255, 255, 255, 1);;
+    box-shadow:
+                    0px 0px 10px rgba(255, 255, 255, 1),
+                    0px 0px 20px rgb(255, 255, 255),
+                    0px 0px 10px rgb(255, 255, 255, 1);
+    transition: .3s;
+    color: white;
+}
+.card {
+  background-color: rgb(20, 20, 20);
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 1),
+              0px 0px 20px rgb(255, 255, 255),
+              0px 0px 10px rgb(255, 255, 255, 1);
+  color: white;
+  /* align-items: center; */
+}
+
+
+.gridContainer {
+  margin-top: 70px; /* Space to prevent overlap with navbar */
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(6, 20%);
+  grid-gap: 10px;
+  justify-content: center;
+}
+.col {
+  color: white;
+  padding: 20px;
+}
+.subjectButtons {
+  font-size: 2em;
+    background-color: rgb(0, 0, 0);
+    border: 3px solid rgb(241, 243, 241);
+    border-radius: 8px;
+    transition: 0.3s;
+    padding: 10px ;
+    color: white;
+    text-decoration: none;
+}
+.subjectButtons:hover {
+  background-color: rgba(83, 92, 80, 0);
+    border-color: #ffffff;
+    text-shadow:    0px 0px 7px rgba(255, 255, 255, 1),
+                    0px 0px 20px rgba(255, 255, 255, 1),
+                    0px 0px 10px rgb(255, 255, 255, 1),
+                    0px 0px 15px rgba(255, 255, 255, 1);;
+    box-shadow:
+                    0px 0px 10px rgba(255, 255, 255, 1),
+                    0px 0px 20px rgb(255, 255, 255),
+                    0px 0px 10px rgb(255, 255, 255, 1);
+    transition: .3s;
+    color: white;
+    text-decoration: none;
+} 
+.card-header {
+  font-weight: bolder;
+}
+.table {
+  color:white;
+}
+/* .chatbox {
+  background:black;
+} */
+.chatButton {
+  font-size: 0.8em;
+    border: 1px solid white;
+    border-radius: 8px;
+    transition: 0.3s;
+    color: black;
+    text-decoration: none;
+}
+.chatButton:hover {
+  background-color: rgb(1, 191, 1);
+    border-color: #ffffff;
+    transition: .3s;
+    color: white;
+    text-decoration: none;
+}

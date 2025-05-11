@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="/style.css">
+  <title>Update Notes</title>
+</head>
+<body>
+  <nav>
+    <h4>CIS485 Final Project</h4>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/subjects">Subjects</a></li>
+      <li><a href="/profile">Profile</a></li>
+    </ul>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header">
+        Update File
+      </div>
+      <div class="card-body">
+        <h5>Original filename: {{file.filename}}</h5>
+        <p><strong>File ID:</strong> {{file.fileid}}</p>
+        <p><strong>Subject:</strong> {{file.subject}}</p>
+
+        <form action="/notesController/updateFilename?_method=PUT" method="POST">
+          <input type="hidden" name="fileid" value="{{file.fileid}}">
+          <input type="hidden" name="subject" value="{{file.subject}}">
+          <div class="form-group">
+            <label for="newfilename">New Filename:</label>
+            <input type="text" class="form-control" name="newfilename" id="newfilename" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+      </div>
+    </div>
+
+    {{#if message }}
+      <h4 class="alert alert-dark mt-4">{{message}}</h4>
+    {{/if}}
+  </div>
+</body>
+</html>

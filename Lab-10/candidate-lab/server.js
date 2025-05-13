@@ -35,6 +35,7 @@ app.get('/candidates', (req, res) => {
 			<p><strong>Platform:</strong> ${candidate.platform}</p>
 			<p><strong>Slogan:</strong> ${candidate.slogan}</p>
 		</div>`).join('');
+		
 	res.send(
 		`<html>
 			<head>
@@ -77,16 +78,16 @@ app.get('/addCandidate', (req, res) => {
 		<h1> Add a New Political Candidate </h1>
 		<form action="/addCandidate" method="POST">
 			<label for="name"> Name: </label><br>
-			<input type="text" id="name" name="name" required><br>
+			<input type="text" id="name" name="name"><br>
 
 			<label for="party"> Party: </label><br>
-			<input type="text" id="party" name="party" required><br>
+			<input type="text" id="party" name="party"><br>
 
 			<label for="platform"> Platform: </label><br>
-			<input type="text" id="platform" name="platform" required><br>
+			<input type="text" id="platform" name="platform"><br>
 
 			<label for="slogan"> Slogan: </label><br>
-			<input type="text" id="slogan" name="slogan" required><br><br>
+			<input type="text" id="slogan" name="slogan"><br><br>
 
 			<input type="submit" value="Submit">
 		</form>
@@ -97,6 +98,20 @@ app.get('/addCandidate', (req, res) => {
 
 app.post('/addCandidate', (req, res) => {
 	const { name, party, platform, slogan } = req.body;
+
+	if (!name || !party || !platform || !slogan) {
+		return res.status(400).send(
+			`
+			<html>
+				<body>
+					<h1> 400 Bad Request </h1>
+					<p> All fields must be filled out. (name, party, platform, slogan) </p>
+					<a href="/addCandidate"> Go back to the form </a>				
+				</body>
+			</html>
+			`
+		);
+	}
 	const newCandidate = {
 		id: candidates.length + 1,
 		name: name,
@@ -105,9 +120,72 @@ app.post('/addCandidate', (req, res) => {
 		slogan: slogan
 	};
 	candidates.push(newCandidate);
+
 	fs.writeFileSync('candidates.json', JSON.stringify(candidates, null, 2));
 
 	res.redirect('/candidates');
+});
+
+app.get('/candidates/:id', (req, res) => {
+	const candidateID = parseInt(req.params.id);	//changing params to query breaks this route from working properly
+
+	if (isNaN(candidateID)) {
+		return res.status(400).send(
+			`
+			<html>
+				<body>
+					<h1>400 Bad Request</h1>
+					<p>Invalid Candidate ID. Please use a numeric value ID.</p>
+					<a href='/candidates'> Go back to candidate list </a>
+				</body>
+			</html>
+			`);
+	}
+
+	const candidate = candidates.find(c => c.id === candidateID);
+
+	if (!candidate) {
+		return res.status(404).send(
+			`
+			<html>
+				<body>
+					<h1>404 Not Found</h1>
+					<p>Candidate with ID ${candidateID} was not found.</p>
+					<a href="/candidates">Go back to candidate list</a>
+				</body>
+			</html>
+			`);	
+	}
+	res.send(
+		`
+		<html>
+			<body>
+				<h1> Candidate Details </h1>
+				<h2>${candidate.name}</h2>
+				<p><strong>Party:</strong> ${candidate.party}</p>
+				<p><strong>Platform:</strong> ${candidate.platform}</p>
+				<p><strong>Slogan:</strong> ${candidate.slogan}</p>
+				<a href="/candidates">Go back to candidate list</a>
+			</body>
+		</html>
+		`);
+
+});
+
+app.use((error, request, response, next) => {
+	console.error(error.stack);
+	response.status(500).send(
+		`
+		<html>
+			<body>
+				<h1> 500 Internal Server Error </h1>
+				<p>Something went wrong with the server lol</p>
+				<a href="/candidates">Go back to candidate list</a>
+			</body>
+		</html>
+
+
+		`);
 });
 
 app.listen(PORT, () => {

@@ -36,10 +36,16 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.isLoggedIn = async (req, res, next) => {
   try {
+    // const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+    // if (publicPaths.includes(req.path)) return next();
     // get token from cookie
     const token = req.cookies?.jwt;
     if (!token) {
-      return res.redirect("/login");
+      // return res.redirect("/login");
+      res.locals.user = null;
+      req.user = null;
+      if (isProtectedRoute(req.path)) return res.redirect("/401");
+      return next();
     }
 
     //  verify 
@@ -51,7 +57,11 @@ exports.isLoggedIn = async (req, res, next) => {
     const user = result.rows[0];
 
     if (!user) {
-      return res.redirect("/login");
+      // return res.redirect("/login");
+      res.locals.user = null;
+      req.user = null;
+      if (isProtectedRoute(req.path)) return res.redirect("/401");
+      return next();
     }
 
     // attatch user to request for later access
@@ -60,10 +70,19 @@ exports.isLoggedIn = async (req, res, next) => {
     next();
 
   } catch (err) {
-    console.error("JWT verification failed or user fetch error:", err.message);
-    return res.redirect("/login");
+    console.error("JWT verification failed or Invalid Token:", err.message);
+    res.clearCookie('jwt'); // Clear the cookie if token is invalid
+    res.locals.user = null;
+    req.user = null;
+    // return res.redirect("/401");
+    if (isProtectedRoute(req.path)) return res.redirect("/401");
+    return next();
   }
 };
+function isProtectedRoute(path) {
+  const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+  return !publicPaths.includes(path.toLowerCase());
+}
 
 const getNotesBySubject = async (userid, subject) => {
   const result = await pool.query(

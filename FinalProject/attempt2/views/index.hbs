@@ -23,6 +23,12 @@
   </nav>
 
   <div class="container mt-4"> {{!--thats just the name bro idk--}}
+    {{#if showExpiredMessage}}
+      <div class="alert alert-warning mt-4 text-center">
+        Your session has expired. Please <a href="/login">log in</a> again.
+      </div>
+    {{/if}}
+
     <div class="jumbotron" style="width:auto;"> {{!-- This is a Bootstrap component for a large callout, again, I didnt pick the name thats just how it is from bootstrap --}}
       <h1 class="display-4">Welcome to Comparta </h1>
       <p class="lead">Your space to share, connect, and collaborate.</p>
@@ -32,6 +38,7 @@
       </p>
       <a class="learnMoreButton" href="/about" role="button">Learn more</a>
     </div>
+
   </div>
 
   {{!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> --}}

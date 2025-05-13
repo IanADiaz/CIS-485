@@ -6,8 +6,18 @@ const notesController = require('../controllers/notesController');
 const router = express.Router();
 
 router.get('/', authController.isLoggedIn, (req, res) => {
+  console.log('Cookies received on GET /:', req.cookies);
+
+  // const showExpiredMessage = req.cookies.tokenExpired === '1';
+  const showExpiredMessage = req.query.expired === '1';
+
+  console.log('showExpiredMessage:', showExpiredMessage);
+
+  // res.clearCookie('tokenExpired'); 
+
   res.render('index', {
-    user: req.user
+    user: req.user,
+    showExpiredMessage
   });
 });
 // router.get('/', authController.checkUser, (req, res) => {
@@ -70,15 +80,15 @@ router.get('/uploadNotes', authController.isLoggedIn, (req, res) => {
   }
 });
 
-router.get('/updateNotes', authController.isLoggedIn, (req, res) => {
-  if( req.user ) {
-    res.render('updateNotes', {
-      user: req.user
-    });
-  } else {
-    res.redirect('/login');
-  }
-});
+// router.get('/updateNotes', authController.isLoggedIn, (req, res) => {
+//   if( req.user ) {
+//     res.render('updateNotes', {
+//       user: req.user
+//     });
+//   } else {
+//     res.redirect('/login');
+//   }
+// });
 
 // ------------------------------------------------------------------------------------------------
 
@@ -104,5 +114,12 @@ router.get('/about', authController.isLoggedIn, (req, res) => {
 
 // ------------------------------------------------------------------------------------------------
 
+router.get('/401', (req, res) => {
+  res.status(401).render('401');
+});
+
+router.get('/404', (req, res) => {
+  res.status(404).render('401');
+});
 
 module.exports = router;

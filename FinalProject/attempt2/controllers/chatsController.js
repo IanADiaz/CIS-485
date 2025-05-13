@@ -1,6 +1,7 @@
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
+const xss = require('xss');
 
 // exports.isLoggedIn = async (req, res, next) => {
 //     if (req.cookies.jwt && req.cookies.jwt !== 'logout') {
@@ -31,12 +32,50 @@ const { promisify } = require('util');
 //     }
 //   };
 
+// exports.isLoggedIn = async (req, res, next) => {
+//   try {
+//     const publicPaths = ['/', '/login', '/register', '/401'];
+//     if (publicPaths.includes(req.path)) return next();
+//     // get token from cookie
+//     const token = req.cookies?.jwt;
+//     if (!token) {
+//       return res.redirect("/login");
+//     }
+
+//     //  verify 
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     const userid = decoded.userid;
+
+//     // get user from database
+//     const result = await pool.query("SELECT * FROM users WHERE userid = $1", [userid]);
+//     const user = result.rows[0];
+
+//     if (!user) {
+//       return res.redirect("/login");
+//     }
+
+//     // attatch user to request for later access
+//     req.user = user;
+//     res.locals.user = user; // for  {{#if user}}...
+//     next();
+
+//   } catch (err) {
+//     console.error("JWT verification failed or Invalid Token:", err.message);
+//     return res.redirect("/401");
+//   }
+// };
 exports.isLoggedIn = async (req, res, next) => {
   try {
+    // const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+    // if (publicPaths.includes(req.path)) return next();
     // get token from cookie
     const token = req.cookies?.jwt;
     if (!token) {
-      return res.redirect("/login");
+      // return res.redirect("/login");
+      res.locals.user = null;
+      req.user = null;
+      if (isProtectedRoute(req.path)) return res.redirect("/401");
+      return next();
     }
 
     //  verify 
@@ -48,7 +87,11 @@ exports.isLoggedIn = async (req, res, next) => {
     const user = result.rows[0];
 
     if (!user) {
-      return res.redirect("/login");
+      // return res.redirect("/login");
+      res.locals.user = null;
+      req.user = null;
+      if (isProtectedRoute(req.path)) return res.redirect("/401");
+      return next();
     }
 
     // attatch user to request for later access
@@ -57,10 +100,19 @@ exports.isLoggedIn = async (req, res, next) => {
     next();
 
   } catch (err) {
-    console.error("JWT verification failed or user fetch error:", err.message);
-    return res.redirect("/login");
+    console.error("JWT verification failed or Invalid Token:", err.message);
+    res.clearCookie('jwt'); // Clear the cookie if token is invalid
+    res.locals.user = null;
+    req.user = null;
+    // return res.redirect("/401");
+    if (isProtectedRoute(req.path)) return res.redirect("/401");
+    return next();
   }
 };
+function isProtectedRoute(path) {
+  const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+  return !publicPaths.includes(path.toLowerCase());
+}
 
 // Extract and verify JWT from cookies
 async function verifyToken(req, res) {  //not sure i even need this
@@ -120,11 +172,15 @@ exports.createMessage = async (req, res) => {
 
     const { subject, message, replyto } = req.body;
 
+    const cleanMessage = xss(message); // Sanitize the message to prevent XSS attacks
+    const cleanReplyTo = replyto ? xss(replyto) : null; // Sanitize the replyto if it exists
+
     const result = await pool.query(`
       INSERT INTO chatMessages (senderid, subject, message, timesent, replyto)
       VALUES ($1, $2, $3, NOW(), $4)
       RETURNING *`,
-      [userid, subject, message, replyto || null]
+      // [userid, subject, message, replyto || null]
+      [userid, subject, cleanMessage, cleanReplyTo]
     );
 
     res.status(201).json(result.rows[0]);
@@ -145,6 +201,7 @@ exports.updateMessage = async (req, res) => {
 
     const messageid = req.params.messageid;
     const { message } = req.body;
+    const cleanMessage = xss(message); // Sanitize the message to prevent XSS attacks
 
     const check = await pool.query('SELECT * FROM chatMessages WHERE messageid = $1 AND senderid = $2', [messageid, userid]);
 
@@ -155,7 +212,8 @@ exports.updateMessage = async (req, res) => {
     const result = await pool.query(`
       UPDATE chatMessages SET message = $1 WHERE messageid = $2
       RETURNING *`,
-      [message, messageid]
+      // [message, messageid]
+      [cleanMessage, messageid]
     );
 
     res.status(200).json(result.rows[0]);

@@ -15,6 +15,8 @@ const hbs = require('hbs');
 const handlebars = require('handlebars');
 const jwt = require('jsonwebtoken');
 const axios = require('axios')
+// const xss = require('xss');
+const sanitizeBody = require('./controllers/sanitiize');
 
 hbs.registerHelper('encodeURI', function (str) {
   return encodeURIComponent(str);
@@ -28,6 +30,7 @@ app.use(express.json());
 app.use(cookieParser());
 // app.use(fileUpload());
 app.use(methodOverride('_method'));
+app.use(sanitizeBody);
 
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -207,8 +210,8 @@ io.on("connection", (socket) => {
 });
 
 
-app.use((req, res) => {res.status(404).render('404');});
 app.use((req, res) => {res.status(404).render('401');});
+app.use((req, res) => {res.status(404).render('404');});
 
 
 const PORT = 8000;

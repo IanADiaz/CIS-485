@@ -210,9 +210,12 @@ io.on("connection", (socket) => {
 });
 
 
-app.use((req, res) => {res.status(404).render('401');});
-app.use((req, res) => {res.status(404).render('404');});
-
+// app.use((req, res) => {res.status(401).render('401');});
+// app.use((req, res) => {res.status(404).render('404');});
+app.use((req, res) => {
+  console.warn(`404 Not Found: ${req.originalUrl}`);
+  res.status(404).render('404');
+});
 
 const PORT = 8000;
 

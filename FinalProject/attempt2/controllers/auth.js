@@ -220,6 +220,14 @@ exports.isLoggedIn = async (req, res, next) => {
 };
 function isProtectedRoute(path) {
   const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+  const knownPaths = [
+    '/', '/login', '/register', '/profile', '/update', '/subjects', '/uploadNotes',
+    '/about', '/auth/logout', '/notesController', '/chat'
+  ];
+
+  if (!knownPaths.some(p => path.toLowerCase().startsWith(p.toLowerCase()))) {
+    return false;
+  }
   return !publicPaths.includes(path.toLowerCase());
 }
 

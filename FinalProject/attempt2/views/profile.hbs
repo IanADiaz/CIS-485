@@ -18,6 +18,11 @@
   </nav>
 
   <div class="container mt-4">
+    {{#if message}}
+      <div class="alert alert-success" role="alert">
+        {{message}}
+      </div>
+    {{/if}}
     <div class="row">
       <div class="col-4">
         <div class="card" id="userCard">

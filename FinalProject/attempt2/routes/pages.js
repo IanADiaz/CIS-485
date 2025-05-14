@@ -35,10 +35,12 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/profile', authController.isLoggedIn, (req, res) => {
+  const showSuccessMessage = req.query.updated === '1';
   //console.log(req.user);
   if( req.user ) {
     res.render('profile', {
-      user: req.user
+      user: req.user,
+      message: showSuccessMessage ? 'Profile updated successfully!' : null
     });
   } else {
     res.redirect('/login');

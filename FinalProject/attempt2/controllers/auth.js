@@ -271,7 +271,7 @@ exports.update = async (req, res) => {
       [username, hashedPassword, email, gender, genderPronouns, decoded.userid]
     );
 
-    return res.redirect('/profile'); 
+    return res.redirect('/profile?updated=1'); 
 
   } catch (error) {
     console.error('Error during update:', error);

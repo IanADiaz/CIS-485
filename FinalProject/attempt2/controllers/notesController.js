@@ -34,6 +34,55 @@ const JWT_SECRET = process.env.JWT_SECRET;
 //     // }
 // };
 
+// exports.isLoggedIn = async (req, res, next) => {
+//   try {
+//     // const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+//     // if (publicPaths.includes(req.path)) return next();
+//     // get token from cookie
+//     const token = req.cookies?.jwt;
+//     if (!token) {
+//       // return res.redirect("/login");
+//       res.locals.user = null;
+//       req.user = null;
+//       if (isProtectedRoute(req.path)) return res.redirect("/401");
+//       return next();
+//     }
+
+//     //  verify 
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     const userid = decoded.userid;
+
+//     // get user from database
+//     const result = await pool.query("SELECT * FROM users WHERE userid = $1", [userid]);
+//     const user = result.rows[0];
+
+//     if (!user) {
+//       // return res.redirect("/login");
+//       res.locals.user = null;
+//       req.user = null;
+//       if (isProtectedRoute(req.path)) return res.redirect("/401");
+//       return next();
+//     }
+
+//     // attatch user to request for later access
+//     req.user = user;
+//     res.locals.user = user; // for  {{#if user}}...
+//     next();
+
+//   } catch (err) {
+//     console.error("JWT verification failed or Invalid Token:", err.message);
+//     res.clearCookie('jwt'); // Clear the cookie if token is invalid
+//     res.locals.user = null;
+//     req.user = null;
+//     // return res.redirect("/401");
+//     if (isProtectedRoute(req.path)) return res.redirect("/401");
+//     return next();
+//   }
+// };
+// function isProtectedRoute(path) {
+//   const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+//   return !publicPaths.includes(path.toLowerCase());
+// }
 exports.isLoggedIn = async (req, res, next) => {
   try {
     // const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
@@ -71,18 +120,39 @@ exports.isLoggedIn = async (req, res, next) => {
 
   } catch (err) {
     console.error("JWT verification failed or Invalid Token:", err.message);
-    res.clearCookie('jwt'); // Clear the cookie if token is invalid
+    // res.clearCookie('jwt'); // Clear the cookie if token is invalid
     res.locals.user = null;
     req.user = null;
     // return res.redirect("/401");
+    if (err.name === 'TokenExpiredError') {
+      res.clearCookie('jwt'); // Clear the cookie if token is expired
+      // if(req.path === '/profile' || req.path === '/update' || req.path === '/subjects' || req.path === '/uploadNotes' || req.path.startsWith('/chat')) {
+        // res.cookie('tokenExpired', '1', {maxAge: 5000, httpOnly: false});
+        // return res.redirect('/401');
+        // const seperator = req.path.includes('?') ? '&' : '?';
+        // const redirectUrl = `${req.path}${seperator}expired=1`;
+        // res.writeHead(302, { Location: redirectUrl });
+        // return res.end();
+        return res.redirect('/401');
+      } 
+    // }
     if (isProtectedRoute(req.path)) return res.redirect("/401");
     return next();
   }
 };
 function isProtectedRoute(path) {
   const publicPaths = ['/', '/login', '/register', '/401', '/404', '/about'];
+  const knownPaths = [
+    '/', '/login', '/register', '/profile', '/update', '/subjects', '/uploadNotes',
+    '/about', '/auth/logout', '/notesController', '/chat'
+  ];
+
+  if (!knownPaths.some(p => path.toLowerCase().startsWith(p.toLowerCase()))) {
+    return false;
+  }
   return !publicPaths.includes(path.toLowerCase());
 }
+
 
 const getNotesBySubject = async (userid, subject) => {
   const result = await pool.query(
@@ -94,10 +164,14 @@ const getNotesBySubject = async (userid, subject) => {
 
 exports.displayNotes = async (req, res) => {
     try {
+        const token = req.cookies.jwt;
         const subject = req.params.subject;
         const userid = req.user.userid;
-
         const files = await getNotesBySubject(userid, subject);
+
+        if (!token || token === 'logout') {
+            return res.redirect('/401');
+        } 
 
         console.log('File retrieved:', files); //remove later
   
@@ -214,11 +288,19 @@ exports.updateNotes = async (req, res) => {
   
     // Step 2: Validate inputs
     if (!fileid || !newfilename) {
-      return res.status(400).send("Missing file ID or new filename.");
+      // return res.status(400).send("Missing file ID or new filename.");
+      return res.render('updateNotes', {
+        message: 'Missing file ID or new filename.',
+        file: { fileid, subject } 
+    });
     }
   
     if (newfilename.includes('/') || newfilename.includes('..')) {
-      return res.status(400).send("Invalid filename.");
+      // return res.status(400).send("Invalid filename.");
+      return res.render('updateNotes', {
+        message: 'Invalid filename.',
+        file: { fileid, subject }
+    });
     }
   
     try {
@@ -253,14 +335,14 @@ exports.updateNotes = async (req, res) => {
   exports.renderUpdateNotePage = async (req, res) => {
     const fileid = req.params.fileid;
     const token = req.cookies?.jwt;
-    if (!token) return res.status(401).send("Missing auth token");
+    if (!token) return res.redirect('/401');
   
     let userid;
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
       userid = decoded.userid;
     } catch (err) {
-      return res.status(403).send("Invalid token");
+      return res.redirect('/401');
     }
   
     try {
@@ -270,9 +352,12 @@ exports.updateNotes = async (req, res) => {
       );
   
       if (result.rowCount === 0) {
-        return res.status(404).send("File not found or access denied.");
-      }
-  
+        // return res.status(404).send("File not found or access denied.");
+        return res.render('updateNotes', {
+          message: 'File not found or access denied.',
+          file: { fileid, subject }
+      })
+    }
       const file = result.rows[0];
       res.render('updateNotes', { file }); // <-- Sends single file to the view
     } catch (err) {

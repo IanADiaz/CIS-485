@@ -292,7 +292,10 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     if (!req.cookies.jwt) {
-      return res.status(401).send('Unauthorized: No token provided');
+      // return res.status(401).send('Unauthorized: No token provided');
+      return res.render('/update', {
+        message: 'Unauthorized: No token provided or expired'
+      });
     }
     // Decode the JWT to get the user ID
     const decoded = await promisify(jwt.verify)(

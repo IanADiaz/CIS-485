@@ -1,39 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="/style.css">
   <title>Document</title>
+  <style>
+    .theme-toggle-btn {
+      position: fixed;
+      top: 90px;
+      right: 30px;
+      z-index: 1000;
+      border-radius: 8px;
+    }
+  </style>
 </head>
+
 <body>
   <nav>
     <h4>CIS485 Final Project</h4>
     <ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/subjects">Subjects</a></li>   
+      <li><a href="/subjects">Subjects</a></li>
       <li><a href="/auth/logout">Logout</a></li>
     </ul>
   </nav>
+  <button id="modeToggle" class="btn btn-secondary theme-toggle-btn">Toggle Theme</button>
+
 
   <div class="container mt-4">
     {{#if message}}
-      <div class="alert alert-success" role="alert">
-        {{message}}
-      </div>
+    <div class="alert alert-success" role="alert">
+      {{message}}
+    </div>
     {{/if}}
     <div class="row">
       <div class="col-4">
         <div class="card" id="userCard">
           <div class="avatar-ctn">
-            <img src="/defaultAvatar.png" class="avatar" alt="user profile picture"/>
+            <img src="/defaultAvatar.png" class="avatar" alt="user profile picture" />
           </div>
           <div class="card-body">
             <h5 class="card-title">{{user.username}}</h5>
             <p class="card-text">Gender: {{user.gender}}</p>
             <p class="card-text">Pronouns: {{user.genderpronouns}}</p>
-            <button id="copy2Clip" class="btn btn-secondary" data-email="{{user.email}}">Email: {{user.email}}</button></div>
+            <button id="copy2Clip" class="btn btn-secondary" data-email="{{user.email}}">Email: {{user.email}}</button>
+          </div>
         </div>
       </div>
 
@@ -48,10 +63,11 @@
             <a href="/update" class="btn btn-success">Update your credentials</a>
             <br><br>
             <p class="card-text">Or Delete Your Account</p>
-            <form action="/auth/delete?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete your account?');">
+            <form action="/auth/delete?_method=DELETE" method="POST"
+              onsubmit="return confirm('Are you sure you want to delete your account?');">
               <button type="submit" class="btn btn-danger">Delete Your Account</button>
             </form>
-            {{!-- <a href="/auth/delete" class="btn btn-danger">Delete your account</a>  --}}
+            {{!-- <a href="/auth/delete" class="btn btn-danger">Delete your account</a> --}}
           </div>
           <div class="card-footer text-muted">
             CIS485 Final Project
@@ -59,25 +75,46 @@
         </div>
       </div>
     </div>
-    
+
 
   </div>
   <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const copy2Clip = document.getElementById("copy2Clip");
+    document.addEventListener("DOMContentLoaded", function () {
+      const copy2Clip = document.getElementById("copy2Clip");
 
-    copy2Clip.addEventListener("click", function () {
-      const email = this.getAttribute("data-email");
+      copy2Clip.addEventListener("click", function () {
+        const email = this.getAttribute("data-email");
 
-      navigator.clipboard.writeText(email).then(() => {
-        alert("Email copied to clipboard: " + email);
-      }).catch(err => {
-        console.error("Failed to copy email: ", err);
-        alert("Failed to copy email.");
+        navigator.clipboard.writeText(email).then(() => {
+          alert("Email copied to clipboard: " + email);
+        }).catch(err => {
+          console.error("Failed to copy email: ", err);
+          alert("Failed to copy email.");
+        });
       });
     });
-  });
-</script>
-  {{!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> --}}
+  </script>
+  {{!--
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script> --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('modeToggle');
+      const currentMode = localStorage.getItem('mode');
+
+      if (currentMode === 'light') {
+        document.body.classList.add('light-mode');
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+        localStorage.setItem('mode', mode);
+      });
+    });
+  </script>
+
 </body>
+
 </html>

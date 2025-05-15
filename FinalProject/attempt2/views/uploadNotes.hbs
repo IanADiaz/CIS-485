@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="/style.css">
   <title>Document</title>
+  <style>
+    .theme-toggle-btn {
+      position: fixed;
+      top: 90px;
+      right: 30px;
+      z-index: 1000;
+      border-radius: 8px;
+    }
+  </style>
 </head>
+
 <body>
   <nav>
     <h4>CIS485 Final Project</h4>
     <ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/subjects">Subjects</a></li> 
+      <li><a href="/subjects">Subjects</a></li>
       <li><a href="/auth/logout">Logout</a></li>
     </ul>
   </nav>
+  <button id="modeToggle" class="btn btn-secondary theme-toggle-btn">Toggle Theme</button>
+
 
   <div class="container mt-4">
     <div class="card">
@@ -24,22 +38,44 @@
       </div>
       <div class="card-body">
         <form action="/notesController/insertNotes" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="subject">Subject</label>
-                <input type="text" name="subject" id="subject" class="form-control" placeholder="Enter subject/category" required value="{{subject}}" readonly>
-            </div>
-            <div class="form-group">
-                <label for="file">Select File</label>
-                <input type="file" name="file" id="file" class="form-control-file" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Upload</button>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" name="subject" id="subject" class="form-control" placeholder="Enter subject/category"
+              required value="{{subject}}" readonly>
+          </div>
+          <div class="form-group">
+            <label for="file">Select File</label>
+            <input type="file" name="file" id="file" class="form-control-file" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
         </form>
 
-    {{#if success }}
-      <h4 class="alert alert-dark mt-4">{{message}}</h4>
-    {{/if}}
-  </div>
+        {{#if success }}
+        <h4 class="alert alert-dark mt-4">{{message}}</h4>
+        {{/if}}
+      </div>
 
-  {{!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> --}}
+      {{!--
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script> --}}
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const toggleBtn = document.getElementById('modeToggle');
+          const currentMode = localStorage.getItem('mode');
+
+          if (currentMode === 'light') {
+            document.body.classList.add('light-mode');
+          }
+
+          toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            localStorage.setItem('mode', mode);
+          });
+        });
+      </script>
+
 </body>
+
 </html>

@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="/style.css">
   <title>Unauthorized</title>
+  <style>
+    .theme-toggle-btn {
+      position: fixed;
+      top: 90px;
+      right: 30px;
+      z-index: 1000;
+      border-radius: 8px;
+    }
+  </style>
+
 </head>
+
 <body>
   <nav>
     <h4>CIS485 Final Project</h4>
@@ -14,10 +26,30 @@
       <li><a href="/">Home</a></li>
     </ul>
   </nav>
+  <button id="modeToggle" class="btn btn-secondary theme-toggle-btn">Toggle Theme</button>
+
   <div class="container text-center mt-5">
     <h1 class="display-4">401 - Token Expired or Invalid </h1>
     <p class="lead">You do not have permissions to view this page. Please Log in Again</p>
     <a href="/" class="btn btn-primary mt-3">Go Back Home</a>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('modeToggle');
+      const currentMode = localStorage.getItem('mode');
+
+      if (currentMode === 'light') {
+        document.body.classList.add('light-mode');
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+        localStorage.setItem('mode', mode);
+      });
+    });
+  </script>
+
 </body>
+
 </html>

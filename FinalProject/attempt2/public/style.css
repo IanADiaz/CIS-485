@@ -174,3 +174,92 @@ body {
     color: white;
     text-decoration: none;
 }
+/* === Base Theme Variables (Dark Mode by default) === */
+:root {
+  --bg-color: rgb(0, 0, 0);
+  --text-color: white;
+  --card-bg: rgb(20, 20, 20);
+  --border-color: rgb(241, 243, 241);
+  --glow-color: white;
+}
+
+
+/* === Light Mode Overrides === */
+.light-mode {
+  --bg-color: white;
+  --text-color: black;
+  --card-bg: #f8f9fa;
+  --border-color: black;
+  --glow-color: black;
+}
+
+
+/* === Apply Theme Variables === */
+body {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+
+/* Cards, jumbotrons, buttons, etc */
+.card,
+.jumbotron,
+.subjectButtons,
+.learnMoreButton,
+.table {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  box-shadow:
+    0px 0px 10px var(--glow-color),
+    0px 0px 20px var(--glow-color),
+    0px 0px 10px var(--glow-color);
+}
+
+
+/* Navigation */
+nav,
+nav li a {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+
+/* Hover Glow Effects */
+nav li a:hover,
+.learnMoreButton:hover,
+.subjectButtons:hover {
+  background-color: transparent !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+  text-shadow:
+    0px 0px 7px var(--glow-color),
+    0px 0px 20px var(--glow-color),
+    0px 0px 10px var(--glow-color),
+    0px 0px 15px var(--glow-color);
+  box-shadow:
+    0px 0px 10px var(--glow-color),
+    0px 0px 20px var(--glow-color),
+    0px 0px 10px var(--glow-color);
+}
+
+
+/* Subject Grid Cells: make them transparent */
+.col {
+  padding: 20px;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-color) !important;
+}
+
+
+/* Chat Buttons */
+.chatButton {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+.chatButton:hover {
+  background-color: rgb(1, 191, 1);
+  color: white;
+}

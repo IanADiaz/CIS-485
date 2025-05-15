@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="/style.css">
   <title>About Us</title>
+  <style>
+    .theme-toggle-btn {
+      position: fixed;
+      top: 90px;
+      right: 30px;
+      z-index: 1000;
+      border-radius: 8px;
+    }
+  </style>
 </head>
+
 <body>
   <nav>
     <h4>CIS485 Final Project</h4>
     <ul>
       {{#if user }}
-        <li><a href="/">Home</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="/subjects">Subjects</a></li>   
-        <li><a href="/auth/logout">Logout</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/subjects">Subjects</a></li>
+      <li><a href="/auth/logout">Logout</a></li>
       {{else}}
-        <li><a href="/">Home</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
       {{/if}}
     </ul>
   </nav>
+  <button id="modeToggle" class="btn btn-secondary theme-toggle-btn">Toggle Theme</button>
+
 
   <div class="container mt-4"> {{!--thats just the name idk--}}
-    <div class="jumbotron" style="width:auto;"> {{!-- This is a Bootstrap component for a large callout, again, I didnt pick the name thats just how it is from bootstrap --}}
+    <div class="jumbotron" style="width:auto;"> {{!-- This is a Bootstrap component for a large callout, again, I didnt
+      pick the name thats just how it is from bootstrap --}}
       <h1 class="display-4">About this Website</h1>
       {{!-- <p class="lead">Created by: Ian Diaz</p> --}}
       <hr class="my-4">
@@ -33,7 +48,27 @@
       <h2>Email: ian.a.diaz@outlook.com </h2>
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('modeToggle');
+      const currentMode = localStorage.getItem('mode');
 
-  {{!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> --}}
+      if (currentMode === 'light') {
+        document.body.classList.add('light-mode');
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+        localStorage.setItem('mode', mode);
+      });
+    });
+  </script>
+
+  {{!--
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script> --}}
 </body>
+
 </html>

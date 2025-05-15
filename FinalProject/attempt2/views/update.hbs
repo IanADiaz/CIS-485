@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="/style.css">
   <title>Document</title>
+  <style>
+    .theme-toggle-btn {
+      position: fixed;
+      top: 90px;
+      right: 30px;
+      z-index: 1000;
+      border-radius: 8px;
+    }
+  </style>
 </head>
+
 <body>
   <nav>
     <h4>CIS485 Final Project</h4>
@@ -16,13 +28,15 @@
       <li><a href="/auth/logout">Logout</a></li>
     </ul>
   </nav>
+  <button id="modeToggle" class="btn btn-secondary theme-toggle-btn">Toggle Theme</button>
+
 
   <div class="container mt-4">
     <div class="row">
       <div class="col-4">
         <div class="card">
           <div class="avatar-ctn">
-            <img src="/defaultAvatar.png" class="avatar" alt="user profile picture"/>
+            <img src="/defaultAvatar.png" class="avatar" alt="user profile picture" />
           </div>
           <div class="card-body">
             <h5 class="card-title">Your Account</h5>
@@ -37,68 +51,88 @@
           </div>
           <div class="card-body">
             <form action="/auth/update?_method=PUT" method="POST">
-                <div class="form-group">
-                    <label for="name">New Username:</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter new name" required>
-                </div>
+              <div class="form-group">
+                <label for="name">New Username:</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter new name"
+                  required>
+              </div>
 
-                <div class="form-group">
-                    <label for="email">New Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter new email" required>
-                </div>
+              <div class="form-group">
+                <label for="email">New Email:</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter new email" required>
+              </div>
 
-                <div class="form-group">
-                  <label for="gender">Gender: </label>
-                  <select class="form-control" id="gender" name="gender">
-                      <option value=""> </option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                  </select>
-                </div>
+              <div class="form-group">
+                <label for="gender">Gender: </label>
+                <select class="form-control" id="gender" name="gender">
+                  <option value=""> </option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
 
 
-                <div class="form-group">
-                  <label for="genderPronouns">Gender Pronouns: (Optional)</label>
-                  <select class="form-control" id="genderPronouns" name="genderPronouns">
-                      <option value=""> </option>
-                      <option value="He/Him">He/Him</option>
-                      <option value="She/Her">She/Her</option>
-                      <option value="They/Them">They/Them</option>
-                  </select>
-                </div>
+              <div class="form-group">
+                <label for="genderPronouns">Gender Pronouns: (Optional)</label>
+                <select class="form-control" id="genderPronouns" name="genderPronouns">
+                  <option value=""> </option>
+                  <option value="He/Him">He/Him</option>
+                  <option value="She/Her">She/Her</option>
+                  <option value="They/Them">They/Them</option>
+                </select>
+              </div>
 
-                <div class="form-group">
-                    <label for="password">New Password:</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password" required>
-                </div>
+              <div class="form-group">
+                <label for="password">New Password:</label>
+                <input type="password" class="form-control" id="password" name="password"
+                  placeholder="Enter new password" required>
+              </div>
 
-                <div class="form-group">
-                    <label for="passwordConfirm">Confirm Password:</label>
-                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="Confirm new password" required>
-                </div>
+              <div class="form-group">
+                <label for="passwordConfirm">Confirm Password:</label>
+                <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm"
+                  placeholder="Confirm new password" required>
+              </div>
 
-                <button type="submit" class="btn btn-primary">Update</button>
+              <button type="submit" class="btn btn-primary">Update</button>
             </form>
           </div>
           <div class="card-footer text-muted">
             Comparta@help.com
           </div>
-           {{#if message}}
-              <h4 class="alert alert-dark mt-4">{{message}}</h4>
+          {{#if message}}
+          <h4 class="alert alert-dark mt-4">{{message}}</h4>
 
-           {{/if}}
+          {{/if}}
         </div>
       </div>
     </div>
-    
+
 
   </div>
 
-  {{!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> --}}
+  {{!--
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script> --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('modeToggle');
+      const currentMode = localStorage.getItem('mode');
+
+      if (currentMode === 'light') {
+        document.body.classList.add('light-mode');
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+        localStorage.setItem('mode', mode);
+      });
+    });
+  </script>
+
 </body>
+
 </html>
-
-
-
-

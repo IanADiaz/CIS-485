@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{subject}} Chat</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    crossorigin="anonymous">
   <link rel="stylesheet" href="/style.css">
   <style>
+    .theme-toggle-btn {
+      position: fixed;
+      top: 90px;
+      right: 30px;
+      z-index: 1000;
+      border-radius: 8px;
+    }
+
     #chatbox {
       height: 300px;
       border: 1px solid #ccc;
@@ -15,12 +25,14 @@
       background-color: #f9f9f9;
       margin-bottom: 15px;
     }
+
     .chat-message {
       padding: 5px;
       border-bottom: 1px solid #e0e0e0;
     }
   </style>
 </head>
+
 <body>
   <nav>
     <h4>CIS485 Final Project</h4>
@@ -31,6 +43,8 @@
       <li><a href="/auth/logout">Logout</a></li>
     </ul>
   </nav>
+  <button id="modeToggle" class="btn btn-secondary theme-toggle-btn">Toggle Theme</button>
+
 
   <div class="container mt-4">
     <div class="card">
@@ -54,119 +68,137 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
 
-const subject = "{{subject}}";
-  const currentUserId = "{{user.userid}}";
-  let replyToMessageId = null;
+    const subject = "{{subject}}";
+    const currentUserId = "{{user.userid}}";
+    let replyToMessageId = null;
 
-  // Pull JWT token from server-side render
-  const token = "{{token}}";
+    // Pull JWT token from server-side render
+    const token = "{{token}}";
 
-  const socket = io({ query: {token: "{{ token }}" }});
+    const socket = io({ query: { token: "{{ token }}" } });
 
-  console.log("Joining room:", subject);
+    console.log("Joining room:", subject);
 
-  socket.emit("joinRoom", { subject });
+    socket.emit("joinRoom", { subject });
 
-  function createMessageDiv({ messageid, username, senderid, message, replyto }) {
-    const msgDiv = document.createElement("div");
-    msgDiv.classList.add("chat-message");
-    msgDiv.setAttribute("data-id", messageid);
+    function createMessageDiv({ messageid, username, senderid, message, replyto }) {
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("chat-message");
+      msgDiv.setAttribute("data-id", messageid);
 
-    let html = "";
+      let html = "";
 
-    if (replyto) {
+      if (replyto) {
         const repliedMessage = document.querySelector(`[data-id="${replyto}"]`);
         const repliedUsername = repliedMessage?.querySelector("strong").textContent?.replace(":", "");
         html += `<div class="reply-to"><em>↪ replying to message #${repliedUsername}</em></div>`;
-    }
+      }
 
-    html += `<strong>${username}:</strong> <span class="msg-content">${message}</span>`;
+      html += `<strong>${username}:</strong> <span class="msg-content">${message}</span>`;
 
-    if (senderid && username !== "System") {
+      if (senderid && username !== "System") {
         if (currentUserId == senderid) {
-      html += `
+          html += `
         <button class="chatButton" onclick="editMessage('${messageid}')">Edit</button>
         <button class="chatButton" onclick="deleteMessage('${messageid}')">Delete</button>
       `;
+        }
+
+        html += `<button class="chatButton" onclick="setReply('${messageid}')">Reply</button>`;
+      }
+      msgDiv.innerHTML = html;
+      return msgDiv;
     }
 
-    html += `<button class="chatButton" onclick="setReply('${messageid}')">Reply</button>`;
-    }
-    msgDiv.innerHTML = html;
-    return msgDiv;
-  }
+    socket.on("messageHistory", (messages) => {
+      const chatbox = document.getElementById("chatbox");
+      chatbox.innerHTML = "";
+      messages.forEach(msg => {
+        const msgDiv = createMessageDiv(msg);
+        chatbox.appendChild(msgDiv);
+      });
+    });
 
-  socket.on("messageHistory", (messages) => {
-    const chatbox = document.getElementById("chatbox");
-    chatbox.innerHTML = "";
-    messages.forEach(msg => {
+    socket.on("message", (msg) => {
+      const chatbox = document.getElementById("chatbox");
       const msgDiv = createMessageDiv(msg);
       chatbox.appendChild(msgDiv);
+      chatbox.scrollTop = chatbox.scrollHeight;
     });
-  });
 
-  socket.on("message", (msg) => {
-    const chatbox = document.getElementById("chatbox");
-    const msgDiv = createMessageDiv(msg);
-    chatbox.appendChild(msgDiv);
-    chatbox.scrollTop = chatbox.scrollHeight;
-  });
+    socket.on("messageEdited", ({ messageid, message }) => {
+      const msgDiv = document.querySelector(`[data-id="${messageid}"]`);
+      if (msgDiv) {
+        msgDiv.querySelector(".msg-content").textContent = message;
+      }
+    });
 
-  socket.on("messageEdited", ({ messageid, message }) => {
-    const msgDiv = document.querySelector(`[data-id="${messageid}"]`);
-    if (msgDiv) {
-      msgDiv.querySelector(".msg-content").textContent = message;
+    socket.on("messageDeleted", ({ messageid }) => {
+      const msgDiv = document.querySelector(`[data-id="${messageid}"]`);
+      if (msgDiv) msgDiv.remove();
+    });
+
+    function sendMessage() {
+      const input = document.getElementById("messageInput");
+      const message = input.value.trim();
+
+      if (message) {
+        socket.emit("chatMessage", {
+          subject,
+          message,
+          replyTo: replyToMessageId
+        });
+        input.value = "";
+        input.placeholder = "Type a message...";
+        replyToMessageId = null;
+      }
     }
-  });
 
-  socket.on("messageDeleted", ({ messageid }) => {
-    const msgDiv = document.querySelector(`[data-id="${messageid}"]`);
-    if (msgDiv) msgDiv.remove();
-  });
-
-  function sendMessage() {
-    const input = document.getElementById("messageInput");
-    const message = input.value.trim();
-
-    if (message) {
-      socket.emit("chatMessage", {
-        subject,
-        message,
-        replyTo: replyToMessageId
-      });
-      input.value = "";
-      input.placeholder = "Type a message...";
-      replyToMessageId = null;
+    function setReply(messageid) {
+      replyToMessageId = messageid;
+      const input = document.getElementById("messageInput");
+      //input.placeholder = `Replying to message #${messageid}...`;
+      const originalMssgDiv = document.querySelector(`[data-id="${messageid}"]`);
+      const originalUserName = originalMssgDiv?.querySelector("strong").textContent?.replace(":", "");
+      input.placeholder = `Replying to ${originalUserName}...`;
+      input.focus();
     }
-  }
 
-  function setReply(messageid) {
-    replyToMessageId = messageid;
-    const input = document.getElementById("messageInput");
-    //input.placeholder = `Replying to message #${messageid}...`;
-    const originalMssgDiv = document.querySelector(`[data-id="${messageid}"]`);
-    const originalUserName = originalMssgDiv?.querySelector("strong").textContent?.replace(":", "");
-    input.placeholder = `Replying to ${originalUserName}...`;
-    input.focus();
-  }
+    function editMessage(messageid) {
+      const msgDiv = document.querySelector(`[data-id="${messageid}"]`);
+      const span = msgDiv.querySelector(".msg-content");
+      const oldMessage = span.textContent;
+      const newMessage = prompt("Edit your message:", oldMessage);
 
-  function editMessage(messageid) {
-    const msgDiv = document.querySelector(`[data-id="${messageid}"]`);
-    const span = msgDiv.querySelector(".msg-content");
-    const oldMessage = span.textContent;
-    const newMessage = prompt("Edit your message:", oldMessage);
-
-    if (newMessage && newMessage !== oldMessage) {
-      socket.emit("editMessage", { messageid, newMessage });
+      if (newMessage && newMessage !== oldMessage) {
+        socket.emit("editMessage", { messageid, newMessage });
+      }
     }
-  }
 
-  function deleteMessage(messageid) {
-    if (confirm("Are you sure you want to delete this message?")) {
-      socket.emit("deleteMessage", { messageid });
+    function deleteMessage(messageid) {
+      if (confirm("Are you sure you want to delete this message?")) {
+        socket.emit("deleteMessage", { messageid });
+      }
     }
-  }
-    
+
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('modeToggle');
+      const currentMode = localStorage.getItem('mode');
+
+      if (currentMode === 'light') {
+        document.body.classList.add('light-mode');
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+        localStorage.setItem('mode', mode);
+      });
+    });
+  </script>
+
 </body>
+
 </html>
